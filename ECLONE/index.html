@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Commerce</title>
+    <link rel="stylesheet" href=".//assets/css/footer.css" />
+    <link rel="stylesheet" href=".//assets/css/navbar.css" />
+    <link rel="stylesheet" href=".//assets/css/style.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="left-side">
+        <h2>Trendyol</h2>
+      </div>
+      <div class="right-side">
+        <a href="#top-seller-section">HOME</a>
+        <li><a href="#" id="about-link">ABOUT US</a></li>
+        <a href="#" id="contact-link">CONTACT</a>
+        <a href="#categories-section">PRODUCTS</a>
+        <a href="#">LOGIN</a>
+        <a href="" id="cart-link"
+          ><i class="fa-solid fa-cart-shopping"></i
+          ><span id="cart-count">0</span></a
+        >
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Top Seller Slider -->
+      <h2 id="top-seller-section" style="text-align: center">TOP SELLER</h2>
+      <section class="slider-container" id="top-sellers">
+        <div class="slider">
+          <div class="slide">
+            <img src="./assets/images/1.png" alt="Ürün 1" />
+          </div>
+          <div class="slide">
+            <img src="./assets/images/2.png" alt="Ürün 2" />
+          </div>
+          <div class="slide">
+            <img src="./assets/images/3.png" alt="Ürün 3" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Kategoriler -->
+      <div class="categories" id="categories-section">
+        <h2>CATEGORIES</h2>
+        <div class="category-list" id="category-list">
+          <div class="card" data-category="giyim"></div>
+          <div class="card" data-category="teknoloji"></div>
+          <div class="card" data-category="ev"></div>
+        </div>
+
+        <!-- Alt Kategoriler -->
+        <div class="subcategory-list" id="subcategory-list">
+          <div class="subcategory-header">
+            <button id="back-btn">Back</button>
+            <h2 id="subcategory-title">Sub Categories</h2>
+          </div>
+
+          <div class="search-container">
+            <input
+              type="text"
+              id="search-bar"
+              placeholder="Search something..."
+            />
+          </div>
+
+          <div class="subcategory-items" id="subcategory-items">
+            <!-- JS ile alt kategori kartları eklenecek -->
+          </div>
+
+          <div class="product-list" id="product-list">
+            <!-- JS ile ürünler eklenecek, fiyatlı -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- Kurumsal -->
+        <div class="footer-section">
+          <h3>Corporate</h3>
+          <ul>
+            <li><a href="#" id="footer-about">About Us</a></li>
+            <li><a href="#">Career</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+
+        <!-- Müşteri Hizmetleri -->
+        <div class="footer-section">
+          <h3>Customer Services</h3>
+          <ul>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Refund &amp; Exchange</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- İletişim -->
+        <div class="footer-section">
+          <h3>İletişim</h3>
+          <p>📍 İstanbul, Turkey</p>
+          <p>📞 +90 555 555 55 55</p>
+          <p>📧 destek@trendyolclone.com</p>
+        </div>
+
+        <!-- Sosyal & Bülten -->
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <div class="social-links">
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          </div>
+          <h3>Bülten</h3>
+          <input type="email" placeholder="Your E-mail" />
+          <button>Subscribe</button>
+        </div>
+      </div>
+
+      <!-- Alt Footer -->
+      <div class="footer-bottom">
+        <div class="payments">
+          <img src="visa.png" alt="Visa" />
+          <img src="mastercard.png" alt="MasterCard" />
+          <img src="paypal.png" alt="PayPal" />
+        </div>
+        <p>© 2025 Trendyol Clone | All rights reserved.</p>
+        <div class="security">
+          <img src="ssl.png" alt="SSL" />
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modallar -->
+
+    <!-- Hakkında Modal -->
+    <div id="about-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Hakkında</h2>
+        <p>
+          This e-commerce website has been created for demonstration purposes.
+          Modern design and features have been used to enhance the user
+          experience.
+        </p>
+      </div>
+    </div>
+
+    <!-- İletişim Modal -->
+    <div id="contact-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn-contact">&times;</span>
+        <h2>İletişim</h2>
+        <form id="contact-form">
+          <input type="text" placeholder="Adınız" required />
+          <input type="email" placeholder="E-posta" required />
+          <textarea placeholder="Mesajınız" required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sepet Modal -->
+    <div id="cart-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn-cart">&times;</span>
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <div id="cart-total" style="margin-top: 15px; font-weight: bold">
+          Total: 0₺
+        </div>
+
+        <button
+          id="checkout-btn"
+          style="
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: green;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+          "
+        >
+          Purchase
+        </button>
+      </div>
+    </div>
+
+    <!-- Ürün Detay Modal -->
+    <div id="product-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn-product"><i class="fa-solid fa-xmark"></i></span>
+        <img
+          id="product-modal-img"
+          src=""
+          alt=""
+          style="max-width: 200px; margin-bottom: 15px"
+        />
+        <h3 id="product-modal-name"></h3>
+        <p id="product-modal-price" style="font-weight: bold; color: green"></p>
+        <p id="product-modal-desc" style="margin: 10px 0"></p>
+        <button
+          id="product-add-cart"
+          style="
+            padding: 10px 20px;
+            background: gold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+          "
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <script defer src="./assets/js/app.js"></script>
+    <script defer src="./assets/js/backend.js"></script>
+    <script defer src="./assets/js/modal.js"></script>
+  </body>
+</html>

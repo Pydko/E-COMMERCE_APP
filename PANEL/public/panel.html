@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product Management Panel</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9fafb;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background: #3c91e6;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 22px;
+      }
+
+      main {
+        width: 80%;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        color: #3c91e6;
+        margin-bottom: 10px;
+      }
+
+      form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      input,
+      select,
+      button {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      /* Full-width for the new input */
+      #images {
+        grid-column: span 2;
+      }
+
+      button {
+        grid-column: span 2;
+        background: #3c91e6;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background: #3c91e6;
+        color: white;
+      }
+
+      .action-btn {
+        margin-right: 5px;
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        color: white;
+      }
+
+      .edit-btn {
+        background-color: #ff9671;
+      }
+
+      .delete-btn {
+        background-color: #3c91e6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>Product Management Panel</header>
+    <main>
+      <h2 id="formTitle">Add Product</h2>
+      <form id="productForm">
+        <input type="text" id="title" placeholder="Product Name" required />
+        <input type="text" id="brand" placeholder="Brand" required />
+        <input type="number" id="price" placeholder="Price" required />
+        <select id="parentCategory" required>
+          <option value="">Select Main Category</option>
+        </select>
+        <select id="subcategory" required>
+          <option value="">Select Subcategory</option>
+        </select>
+        <input
+          type="file"
+          id="images"
+          name="images"
+          multiple
+          accept="image/*"
+        />
+        <button type="submit">Save</button>
+      </form>
+
+      <h2>Products</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Price</th>
+            <th>Main Category</th>
+            <th>Subcategory</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+      </table>
+    </main>
+
+    <script>
+      const parentSelect = document.getElementById("parentCategory");
+      const subSelect = document.getElementById("subcategory");
+      const form = document.getElementById("productForm");
+      const formTitle = document.getElementById("formTitle");
+      const imagesInput = document.getElementById("images");
+      let categories = [];
+      let editingId = null;
+
+      // Load Categories
+      async function loadCategories() {
+        const res = await fetch("http://localhost:3000/server/main/categories");
+        categories = await res.json();
+        parentSelect.innerHTML = `<option value="">Select Main Category</option>`;
+        categories.forEach((cat) => {
+          const opt = document.createElement("option");
+          opt.value = cat._id;
+          opt.textContent = cat.name;
+          parentSelect.appendChild(opt);
+        });
+      }
+
+      // Load and populate subcategories by ID
+      async function fetchSubcategoriesById(categoryId, subcategoryIdToSelect) {
+        subSelect.innerHTML = `<option value="">Select Subcategory</option>`; // Reset first
+        if (!categoryId) {
+          return;
+        }
+
+        // Call the route with ID
+        const res = await fetch(
+          `http://localhost:3000/server/main/subcategories/${categoryId}`
+        );
+        const subs = await res.json();
+
+        // Check if data is an array
+        if (!Array.isArray(subs)) {
+          console.error("Failed to fetch subcategory data:", subs);
+          return;
+        }
+
+        subs.forEach((sub) => {
+          const opt = document.createElement("option");
+          opt.value = sub._id;
+          opt.textContent = sub.name;
+          subSelect.appendChild(opt);
+        });
+
+        // Select the subcategory if an ID is provided
+        if (subcategoryIdToSelect) {
+          subSelect.value = subcategoryIdToSelect;
+        }
+      }
+
+      // Event listener for parent category change
+      parentSelect.addEventListener("change", () => {
+        const selectedCategoryId = parentSelect.value;
+        fetchSubcategoriesById(selectedCategoryId, null);
+      });
+
+      // Add / Update Product
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Create FormData (required for file upload)
+        const formData = new FormData();
+        formData.append("title", document.getElementById("title").value);
+        formData.append("brand", document.getElementById("brand").value);
+        formData.append("price", document.getElementById("price").value);
+        formData.append("productType", parentSelect.value);
+        formData.append("subCategory", subSelect.value);
+
+        // Append selected files to FormData
+        const imageFiles = document.getElementById("images").files;
+        for (let i = 0; i < imageFiles.length; i++) {
+          formData.append("images", imageFiles[i]);
+        }
+
+        if (!editingId) {
+          // Add Product
+          const res = await fetch("http://localhost:3000/server/main", {
+            method: "POST",
+            body: formData, // Use FormData
+          });
+
+          if (res.ok) {
+            alert("Product added successfully!");
+            loadProducts();
+            form.reset();
+            subSelect.innerHTML = `<option value="">Select Subcategory</option>`;
+          } else {
+            const errorData = await res.json();
+            alert(`Addition failed! Error: ${errorData.msg || res.statusText}`);
+          }
+        } else {
+          // Update Product
+          const res = await fetch(
+            `http://localhost:3000/server/main/${editingId}`,
+            {
+              method: "PATCH",
+              body: formData, // Use FormData
+            }
+          );
+
+          if (res.ok) {
+            alert("Product updated successfully!");
+            loadProducts();
+            // Reset form and exit editing mode
+            form.reset();
+            subSelect.innerHTML = `<option value="">Select Subcategory</option>`;
+            formTitle.textContent = "Add Product";
+            editingId = null;
+          } else {
+            const errorData = await res.json();
+            alert(`Update failed! Error: ${errorData.msg || res.statusText}`);
+          }
+        }
+      });
+
+      // Fetch Products
+      async function loadProducts() {
+        const res = await fetch("http://localhost:3000/server/main");
+        const data = await res.json();
+        const table = document.getElementById("productTable");
+        table.innerHTML = "";
+        data.forEach((p) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+					<td>${p.title}</td>
+					<td>${p.brand}</td>
+					<td>${p.price}</td>
+					<td>${p.productType?.name || "-"}</td>
+					<td>${p.subCategory?.name || "-"}</td>
+					<td>
+						<button class="action-btn edit-btn" data-id="${p._id}">Edit</button>
+						<button class="action-btn delete-btn" data-id="${p._id}">Delete</button>
+					</td>
+				`;
+          table.appendChild(row);
+        });
+
+        // Delete Product (NOTE: confirm() has been removed to allow function execution in this environment)
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            
+            // --- DEBUG LOG: Check if the button click event fires ---
+            console.log(`Attempting to DELETE product with ID: ${id}`);
+            console.log(`DELETE URL: http://localhost:3000/server/main/${id}`); // Log the exact URL
+            
+            try {
+              const res = await fetch(`http://localhost:3000/server/main/${id}`, {
+                method: "DELETE",
+              });
+              if (res.ok) {
+                  alert("Product deleted successfully!");
+              } else {
+                  // If the response is not ok, read the error message for better diagnosis
+                  const errorText = await res.text();
+                  alert(`Deletion failed! Server returned status: ${res.status}`);
+                  console.error("DELETE failed:", errorText);
+              }
+              loadProducts();
+            } catch (err) {
+                // Catches network errors (server down, wrong URL, CORS)
+                alert("Network error: Could not reach the server.");
+                console.error("DELETE fetch error:", err);
+            }
+          });
+        });
+
+        // Edit Product
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            
+            // --- DEBUG LOG: Check if the button click event fires ---
+            console.log(`Attempting to EDIT product with ID: ${id}`);
+            console.log(`EDIT GET URL: http://localhost:3000/server/main/${id}`); // Log the exact URL
+
+            try {
+              const res = await fetch(`http://localhost:3000/server/main/${id}`);
+              const p = await res.json();
+              
+              if (!res.ok) {
+                alert(`Error fetching product data for editing.`);
+                console.error("EDIT fetch error:", p);
+                return;
+              }
+              
+              // Populate form
+              document.getElementById("title").value = p.title;
+              document.getElementById("brand").value = p.brand;
+              document.getElementById("price").value = p.price;
+
+              // Clear file input
+              imagesInput.value = "";
+
+              // Select category ID
+              parentSelect.value = p.productType?._id || "";
+
+              // Load and select subcategories (AWAIT is necessary for correct selection)
+              const categoryId = p.productType?._id;
+              await fetchSubcategoriesById(categoryId, p.subCategory?._id);
+
+              formTitle.textContent = "Update Product";
+              editingId = id;
+
+            } catch (err) {
+                // Catches network errors (server down, wrong URL, CORS)
+                alert("Network error: Could not fetch product data for editing.");
+                console.error("EDIT fetch error:", err);
+            }
+          });
+        });
+      }
+
+      loadCategories();
+      loadProducts();
+    </script>
+  </body>
+</html>
