@@ -54,3 +54,13 @@ npm install
 
 # Start the server (seeds DB if empty)
 node server.mjs
+
+
+
+This project was developed by:
+
+Pydko → Backend development (API, database, server logic).
+
+THEPEHLIONE → Frontend development (UI, design, client-side logic).
+
+We welcome contributions! If you have suggestions or want to report a bug, please open an issue or submit a pull request.
