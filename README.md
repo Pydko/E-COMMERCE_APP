@@ -53,12 +53,14 @@ THEPEHLIONE → Frontend development (UI, design, client-side logic).
 We welcome contributions! If you have suggestions or want to report a bug, please open an issue or submit a pull request.
 
 ```bash
-# Clone the repository
-git clone [YOUR_REPOSITORY_URL]
-cd [YOUR_PROJECT_FOLDER_NAME]
 
 # Install server dependencies
-npm install
+npm i express
+npm i -D nodemon
+npm install mongoose
+npm install cors
+npm install multer
+
 
 # Start the server (seeds DB if empty)
 node server.mjs
