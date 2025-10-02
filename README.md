@@ -44,6 +44,14 @@ To run this project locally, follow these steps. You will need Node.js and a loc
 
 ### Installation and Run
 
+This project was developed by:
+
+Pydko → Backend development (API, database, server logic).
+
+THEPEHLIONE → Frontend development (UI, design, client-side logic).
+
+We welcome contributions! If you have suggestions or want to report a bug, please open an issue or submit a pull request.
+
 ```bash
 # Clone the repository
 git clone [YOUR_REPOSITORY_URL]
@@ -55,12 +63,3 @@ npm install
 # Start the server (seeds DB if empty)
 node server.mjs
 
-
-
-This project was developed by:
-
-Pydko → Backend development (API, database, server logic).
-
-THEPEHLIONE → Frontend development (UI, design, client-side logic).
-
-We welcome contributions! If you have suggestions or want to report a bug, please open an issue or submit a pull request.
